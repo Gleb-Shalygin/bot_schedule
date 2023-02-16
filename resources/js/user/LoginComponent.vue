@@ -12,13 +12,13 @@
                             <h5>Логин</h5>
                         </div>
                         <div class="col-12">
-                            <el-input  placeholder="Введите логин" v-model="input"></el-input>
+                            <el-input  placeholder="Введите логин" v-model="user.login"></el-input>
                         </div>
                         <div class="col-1 mt-3">
                             <h5>Пароль</h5>
                         </div>
                         <div class="col-12">
-                            <el-input  placeholder="Введите пароль" v-model="input"></el-input>
+                            <el-input  placeholder="Введите пароль" v-model="user.password" show-password></el-input>
                         </div>
                     </div>
                     <div class="row">
@@ -41,19 +41,19 @@ export default {
     name: "LoginComponent",
     data() {
         return {
-            input: ''
+            user: {
+                password: null,
+                login: null,
+            }
         }
     },
     methods: {
         redirectOnCancel() {
-            window.location.href = '/';
+            window.location.href = "/";
         }
     }
 }
 </script>
 
 <style>
-    body {
-        background-color: #54ffb2;
-    }
 </style>

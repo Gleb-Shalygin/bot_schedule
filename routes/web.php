@@ -15,13 +15,9 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::get('/', function () {
-//    return view('welcome');
-//    \Illuminate\Support\Facades\App::setLocale('ru');
-    echo __('apple');
-});
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 
 Route::get('/admin/register', [\App\Http\Controllers\UserController::class, 'index']);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

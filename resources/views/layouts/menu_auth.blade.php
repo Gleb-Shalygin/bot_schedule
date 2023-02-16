@@ -19,6 +19,7 @@
 </head>
 <body>
     @yield('content')
+
+    @yield('footer')
 </body>
-@yield('footer')
 </html>
