@@ -21,7 +21,7 @@ Route::get('/', function () {
     echo __('apple');
 });
 
-Route::get('/admin/register', [\App\Http\Controllers\UserController::class, 'register']);
+Route::get('/admin/register', [\App\Http\Controllers\UserController::class, 'index']);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

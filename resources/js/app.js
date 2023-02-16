@@ -7,6 +7,7 @@
 import './bootstrap';
 import { createApp } from 'vue';
 import TestComponent from "@/TestComponent.vue";
+import LoginComponent from "@/user/LoginComponent.vue";
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 /**
@@ -23,6 +24,7 @@ const app = createApp({
 
 import ExampleComponent from './components/ExampleComponent.vue';
 app.component('example-component', ExampleComponent);
+app.component('login-component', LoginComponent);
 app.use(ElementPlus)
 
 /**
