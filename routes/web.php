@@ -19,5 +19,9 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 
 Route::get('/admin/register', [\App\Http\Controllers\UserController::class, 'index']);
 
+//Route::prefix('documentation')->group(function () {
+//    Route::get('/', );
+//});
+
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

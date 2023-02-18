@@ -1,9 +1,9 @@
 <template>
     <div class="container text-center">
-        <div class="row align-middle" style="margin-top: 15%;">
+        <div class="row align-middle">
             <div class="col"></div>
-            <div class="col-5">
-                <el-card class="clearfix">
+            <div class="col-6">
+                <el-card class="clearfix text-secondary" :style="{'margin-top': 25 + '%'}">
                     <div slot="header" class="clearfix">
                         <h2>Авторизация пользователя</h2>
                     </div>
@@ -23,10 +23,9 @@
                     </div>
                     <div class="row">
                         <div class="col float-right">
-                            <el-button type="info"
-                                       size="medium"
+                            <el-button class="bg-secondary text-white"
                                        @click="redirectOnCancel">Назад</el-button>
-                            <el-button type="success" size="medium">Войти</el-button>
+                            <el-button type="success" :size="medium">Войти</el-button>
                         </div>
                     </div>
                 </el-card>
