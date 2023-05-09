@@ -27,7 +27,8 @@
     <link href="css/styles.css" rel="stylesheet" />
 </head>
 <body style="height: 100%">
-    <div class="wrapper" style="min-height: 100%; display: flex; flex-direction: column;">
+{{--<div >--}}
+    <div id="app" class="wrapper" style="min-height: 100%; display: flex; flex-direction: column;">
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
             <div class="container">
@@ -40,7 +41,25 @@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/#about">О нас</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/#contact">Контакт</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/login">Войти</a></li>
+                        @guest
+                            <li class="nav-item mx-0 mx-lg-1">
+                                <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/login">Войти</a>
+                            </li>
+                            @else
+                            <div id="app">
+                                <avatar-component></avatar-component>
+                            </div>
+
+{{--                            <li class="nav-item mx-0 mx-lg-1">--}}
+{{--                                <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/login"--}}
+{{--                                    onclick="event.preventDefault();--}}
+{{--                                                document.getElementById('logout-id').submit();">Выйти</a>--}}
+
+{{--                                <form id="logout-id" action="{{ route('logout') }}" method="POST" style="display: none">--}}
+{{--                                    @csrf--}}
+{{--                                </form>--}}
+{{--                            </li>--}}
+                        @endguest
                     </ul>
                 </div>
             </div>
@@ -49,6 +68,7 @@
     </div>
 
     @yield('footer')
+{{--</div>--}}
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->

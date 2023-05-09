@@ -12,7 +12,7 @@
                             <h5>Логин</h5>
                         </div>
                         <div class="col-12">
-                            <el-input  placeholder="Введите логин" v-model="user.login"></el-input>
+                            <el-input  placeholder="Введите логин" v-model="user.email"></el-input>
                         </div>
                         <div class="col-1 mt-3">
                             <h5>Пароль</h5>
@@ -25,7 +25,7 @@
                         <div class="col float-right">
                             <el-button class="bg-secondary text-white"
                                        @click="redirectOnCancel">Назад</el-button>
-                            <el-button type="success" :size="medium">Войти</el-button>
+                            <el-button type="success" @click="login">Войти</el-button>
                         </div>
                     </div>
                 </el-card>
@@ -36,19 +36,43 @@
 </template>
 
 <script>
+import {ElNotification} from "element-plus";
+
 export default {
     name: "LoginComponent",
     data() {
         return {
             user: {
                 password: null,
-                login: null,
+                email: null,
+                _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
         }
     },
     methods: {
         redirectOnCancel() {
             window.location.href = "/";
+        },
+        login() {
+            axios.post('login', this.user)
+                .then((response) => {
+                    if(response.data.status === 203) {
+                        window.location.href = '/admin';
+                        return;
+                    }
+
+                    this.$notify({
+                        title: 'Ошибка',
+                        message: 'Не правильный логин или пароль',
+                        type: 'error',
+                    })
+                }).catch((error) => {
+                    this.$notify({
+                        title: 'Ошибка',
+                        message: 'Не правильный логин или пароль',
+                        type: 'error',
+                    })
+            })
         }
     }
 }

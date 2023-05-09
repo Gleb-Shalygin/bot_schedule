@@ -11,7 +11,6 @@
                         </div>
                         <div class="col-12">
                             <el-input  placeholder="Введите имя"
-                                       size="medium"
                                        v-model="messageData.name"></el-input>
                         </div>
                         <div class="col-1 mt-3">
@@ -40,8 +39,7 @@
                     <div class="row">
                         <div class="col float-right">
                             <el-button type="success"
-                                       @click="sendMessage"
-                                       size="medium">Отправить</el-button>
+                                       @click="sendMessage">Отправить</el-button>
                         </div>
                     </div>
                 </el-card>

@@ -6,10 +6,17 @@
 
 import './bootstrap';
 import { createApp } from 'vue';
+
+// Компоненты
 import TestComponent from "@/TestComponent.vue";
 import LoginComponent from "@/user/LoginComponent.vue";
+import AdminComponent from "@/user/admin/AdminComponent.vue";
 import SupportFormComponent from "@/SupportFormComponent.vue";
+import AvatarComponent from "@/user/AvatarComponent.vue";
+
+// Библиотеки
 import ElementPlus from 'element-plus'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import 'element-plus/dist/index.css'
 import Notifications from '@kyvg/vue3-notification'
 /**
@@ -28,8 +35,14 @@ import ExampleComponent from './components/ExampleComponent.vue';
 app.component('example-component', ExampleComponent);
 app.component('login-component', LoginComponent);
 app.component('support-form-component', SupportFormComponent);
+app.component('admin-component', AdminComponent);
+app.component('avatar-component', AvatarComponent);
+
 app.use(Notifications)
-app.use(ElementPlus)
+app.use(ElementPlus);
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+}
 
 /**
  * The following block of code may be used to automatically register your

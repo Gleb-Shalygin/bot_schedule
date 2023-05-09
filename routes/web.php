@@ -13,15 +13,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 
 Route::get('/admin/register', [\App\Http\Controllers\UserController::class, 'index']);
+
+Route::get('/home', function () {
+//    dd('Авторизовались');
+    return 1;
+});
+
+Route::middleware('admin')->group(function () {
+    Route::get('/admin', [\App\Http\Controllers\Admin\AdminController::class, 'index'])
+        ->name('admin');
+});
+
+//Route::get('/admin', [\App\Http\Controllers\Admin\AdminController::class, 'index'])
+//    ->name('admin.home')
+//    ->middleware('auth');
 
 //Route::prefix('documentation')->group(function () {
 //    Route::get('/', );
 //});
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+Auth::routes();
 
