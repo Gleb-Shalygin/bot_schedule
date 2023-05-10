@@ -46,6 +46,9 @@
                                 <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/login">Войти</a>
                             </li>
                             @else
+                            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/teachers">Преподаватели</a></li>
+                            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/#contact">Занятия</a></li>
+                            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/#contact">Звонки</a></li>
                             <div id="app">
                                 <avatar-component></avatar-component>
                             </div>

@@ -26,6 +26,9 @@ Route::get('/home', function () {
 Route::middleware('admin')->group(function () {
     Route::get('/admin', [\App\Http\Controllers\Admin\AdminController::class, 'index'])
         ->name('admin');
+
+    Route::get('/teachers', [\App\Http\Controllers\TeacherController::class, 'index'])
+        ->name('teachers');
 });
 
 //Route::get('/admin', [\App\Http\Controllers\Admin\AdminController::class, 'index'])

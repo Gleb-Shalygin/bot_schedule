@@ -13,6 +13,7 @@ import LoginComponent from "@/user/LoginComponent.vue";
 import AdminComponent from "@/user/admin/AdminComponent.vue";
 import SupportFormComponent from "@/SupportFormComponent.vue";
 import AvatarComponent from "@/user/AvatarComponent.vue";
+import TeachersComponent from "@/user/admin/teachers/TeachersComponent.vue";
 
 // Библиотеки
 import ElementPlus from 'element-plus'
@@ -37,6 +38,7 @@ app.component('login-component', LoginComponent);
 app.component('support-form-component', SupportFormComponent);
 app.component('admin-component', AdminComponent);
 app.component('avatar-component', AvatarComponent);
+app.component('teachers-component', TeachersComponent);
 
 app.use(Notifications)
 app.use(ElementPlus);
