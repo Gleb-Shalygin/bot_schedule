@@ -1,6 +1,6 @@
 @extends('layouts.menu_auth')
 
-@section('title', 'Админ панель')
+@section('title', 'Преподы')
 @section('header')
 @endsection
 

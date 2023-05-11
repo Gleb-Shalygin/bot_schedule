@@ -11,10 +11,19 @@
 
         <el-card class="box-card">
             <div>
-                <el-table :data="tableData" border style="width: 100%">
-                    <el-table-column prop="date" label="Преподаватель" />
-                    <el-table-column prop="name" label="Группа" />
-                    <el-table-column prop="address" label="Кабинет" />
+                <el-table :data="tableData"
+                          border style="width: 100%">
+                    <el-table-column prop="id" width="50" label="ID" />
+                    <el-table-column prop="name" label="Преподаватель" />
+                    <el-table-column prop="date" label="Группа">
+                        <template #default="scope">
+                            <div class="d-flex">
+                                <div v-for="(group, index) in scope.row.groups" class="badge_group" :key="index">
+                                    {{ group.name}}
+                                </div>
+                            </div>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="Действия"
                                      width="220" >
                         <template #default="scope">
@@ -32,7 +41,9 @@
             </div>
         </el-card>
 
-        <TeachersCreateAndEditModal ref="teacher_modal"/>
+        <TeachersCreateAndEditModal
+            @onUpdateTable="updateTable"
+            ref="teacher_modal"/>
     </div>
 </template>
 
@@ -44,28 +55,7 @@ export default {
     components: {TeachersCreateAndEditModal},
     data() {
         return {
-            tableData: [
-                {
-                    date: '2016-05-03',
-                    name: 'Tom',
-                    address: 'No. 189, Grove St, Los Angeles',
-                },
-                {
-                    date: '2016-05-02',
-                    name: 'Tom',
-                    address: 'No. 189, Grove St, Los Angeles',
-                },
-                {
-                    date: '2016-05-04',
-                    name: 'Tom',
-                    address: 'No. 189, Grove St, Los Angeles',
-                },
-                {
-                    date: '2016-05-01',
-                    name: 'Tom',
-                    address: 'No. 189, Grove St, Los Angeles',
-                },
-            ],
+            tableData: [],
             dialogVisible: false
         }
     },
@@ -74,7 +64,25 @@ export default {
             this.$nextTick((e) => {
                 this.$refs['teacher_modal'].show(12);
             })
+        },
+        getDataTable() {
+            axios.get('/teachers/get-data-table')
+                .then((response) => {
+                    this.tableData = response.data;
+            }).catch((response) => {
+
+            })
+
+
+        },
+        updateTable() {
+            setTimeout(() => {
+                this.getDataTable();
+            }, 1000);
         }
+    },
+    mounted() {
+        this.getDataTable();
     }
 }
 </script>
@@ -82,5 +90,13 @@ export default {
 <style scoped>
     .add_teacher_button {
         margin: 7px 0px 7px 14px;
+    }
+
+    .badge_group {
+        background-color: #2c3e50;
+        padding: 2px 15px;
+        color: white;
+        border-radius: calc(var(--el-border-radius-base) - 1px);
+        margin-right: 10px;
     }
 </style>

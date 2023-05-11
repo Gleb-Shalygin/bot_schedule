@@ -16,7 +16,7 @@ class Admin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(isset(\Auth::user()->admin) && \Auth::user()->admin === 1) {
+        if(isset(\Auth::user()->id_role) && \Auth::user()->id_role === 1) {
             return $next($request);
         }
 
