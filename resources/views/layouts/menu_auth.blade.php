@@ -46,22 +46,17 @@
                                 <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/login">Войти</a>
                             </li>
                             @else
-                            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/teachers">Преподаватели</a></li>
-                            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/#contact">Занятия</a></li>
-                            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/#contact">Звонки</a></li>
+                            @if(\Illuminate\Support\Facades\Auth::user()->id_role === 1)
+                                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/teachers">Преподаватели</a></li>
+                                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/#contact">Расписание</a></li>
+                                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/#contact">Звонки</a></li>
+                            @endif
                             <div id="app">
-                                <avatar-component></avatar-component>
+                                <li class="nav-item mx-0 mx-lg-1 d-flex" style="text-transform: none;">
+                                    <span style="margin-top: 15px;">{{ \Illuminate\Support\Facades\Auth::user()->name }}</span>
+                                    <avatar-component></avatar-component>
+                                </li>
                             </div>
-
-{{--                            <li class="nav-item mx-0 mx-lg-1">--}}
-{{--                                <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/login"--}}
-{{--                                    onclick="event.preventDefault();--}}
-{{--                                                document.getElementById('logout-id').submit();">Выйти</a>--}}
-
-{{--                                <form id="logout-id" action="{{ route('logout') }}" method="POST" style="display: none">--}}
-{{--                                    @csrf--}}
-{{--                                </form>--}}
-{{--                            </li>--}}
                         @endguest
                     </ul>
                 </div>
@@ -71,10 +66,7 @@
     </div>
 
     @yield('footer')
-{{--</div>--}}
-    <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Core theme JS-->
     <script src="js/scripts.js"></script>
 </body>
 </html>

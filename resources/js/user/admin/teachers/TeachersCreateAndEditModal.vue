@@ -1,7 +1,7 @@
 <template>
     <el-dialog
         v-model="dialogVisible"
-        title="Добавить преподавателя"
+        :title="typeModal === 'edit' ? 'Редактировать преподавателя' : 'Добавить преподавателя'"
         width="30%"
         close-on-press-escape
         @close="onClose"
@@ -37,8 +37,8 @@
                 <el-input v-model="modal.password"
                           size="large"
                           type="password"
-                          title="Придумайте пароль"
-                          placeholder="Введите" />
+                          :title="typeModal === 'edit' ? 'Новый пароль' : 'Придумайте пароль'"
+                          :placeholder="typeModal === 'edit' ? 'Новый пароль' : 'Введите'" />
             </el-col>
         </el-row>
         <el-row style="margin-top: 20px">
@@ -62,6 +62,7 @@
                               title="Привяжите группу к преподавателю"
                               placeholder="Введите" />
                     <el-button style="margin-left: 20px"
+                               :disabled="!nameGroup"
                                @click="addGroup"
                                type="success">Добавить</el-button>
                 </div>
@@ -93,12 +94,17 @@ export default {
                 password: '',
                 groups: []
             },
-            nameGroup: ''
+            nameGroup: '',
+            typeModal: 'create'
         }
     },
     methods: {
         show(id) {
+            if(id)
+                this.getTeacherById(id);
+
             this.dialogVisible = true;
+
         },
         removeGroup(index) {
             this.modal.groups.splice(index, 1);
@@ -108,22 +114,64 @@ export default {
 
             this.nameGroup = '';
         },
+        getTeacherById(id) {
+            this.dialogVisible = true;
+            this.typeModal = 'edit';
+
+            axios.get('/teachers/get-teacher/' + id).then((response) => {
+                this.modal = response.data;
+            })
+        },
         addTeacher() {
-            axios.post('/teachers/add-teacher', this.modal)
+            let url = '/teachers/add-teacher';
+
+            if(this.typeModal === 'edit')
+                url = '/teachers/edit-teacher';
+
+            axios.post(url, this.modal)
                 .then((response) => {
                     if(response.data.status === 201)
                         this.$notify({
                             title: 'Успешно',
-                            message: 'Преподаватель успешно добавлен!',
+                            message: (this.typeModal === 'edit') ? 'Преподаватель успешно отредактирован!' : 'Преподаватель успешно добавлен!',
                             type: 'success',
                         })
-                }).catch((response) => {
 
-            })
-            this.dialogVisible = false;
+                    this.dialogVisible = false;
+
+                    this.modal.name = '';
+                    this.modal.password = '';
+                    this.modal.email = '';
+                    this.modal.groups = [];
+                }).catch((error) => {
+                    if(error.response.data.message) {
+                        this.$notify({
+                            title: 'Ошибка',
+                            message: error.response.data.message,
+                            type: 'error'
+                        });
+
+                        return;
+                    }
+
+                    if (error.response.data.errors) {
+                        let errors = error.response.data.errors;
+                        for (let key in errors) {
+                            this.$notify({
+                                title: 'Ошибка',
+                                message: errors[key][0],
+                                type: 'error'
+                            });
+                        }
+                    }
+                }).finally((response) => {
+                })
         },
         onClose() {
+            this.typeModal = 'create';
             this.modal.name = '';
+            this.modal.password = '';
+            this.modal.email = '';
             this.modal.groups = [];
             this.$emit('onUpdateTable');
         }

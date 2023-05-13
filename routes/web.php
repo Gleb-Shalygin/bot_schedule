@@ -28,26 +28,16 @@ Route::middleware('admin')->group(function () {
     Route::get('/admin', [\App\Http\Controllers\Admin\AdminController::class, 'index'])
         ->name('admin');
 
-//    Route::get('/teachers', [\App\Http\Controllers\TeacherController::class, 'index'])
-//        ->name('teachers');
-
     Route::prefix('teachers')->group(function () {
         Route::get('/', [TeacherController::class, 'index'])
             ->name('teachers');
         Route::get('/get-data-table', [TeacherController::class, 'getDataTable']);
+        Route::get('/get-teacher/{id}', [TeacherController::class, 'getTeacher']);
         Route::post('/add-teacher', [TeacherController::class, 'create']);
+        Route::post('/edit-teacher', [TeacherController::class, 'edit']);
+        Route::post('/delete-teacher', [TeacherController::class, 'delete']);
     });
 });
-
-//Route::get('/admin', [\App\Http\Controllers\Admin\AdminController::class, 'index'])
-//    ->name('admin.home')
-//    ->middleware('auth');
-
-//Route::prefix('documentation')->group(function () {
-//    Route::get('/', );
-//});
-
-//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
 Auth::routes();
