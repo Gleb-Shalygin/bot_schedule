@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\AddTeacherRequest;
-use App\Models\User;
 use App\Service\TeacherService;
 use Illuminate\Http\Request;
 

@@ -100,7 +100,7 @@ class TeacherService
             $user = User::find($data['id']);
 
             $user->name = $data['name'];
-            $user->email = $data['name'];
+            $user->email = $data['email'];
 
             if(isset($data['password']))
                 $user->password = $data['password'];

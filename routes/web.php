@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\ScheduleController;
+use App\Http\Controllers\Admin\TeacherController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TeacherController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +21,6 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 Route::get('/admin/register', [\App\Http\Controllers\UserController::class, 'index']);
 
 Route::get('/home', function () {
-//    dd('Авторизовались');
     return 1;
 });
 
@@ -36,6 +36,10 @@ Route::middleware('admin')->group(function () {
         Route::post('/add-teacher', [TeacherController::class, 'create']);
         Route::post('/edit-teacher', [TeacherController::class, 'edit']);
         Route::post('/delete-teacher', [TeacherController::class, 'delete']);
+    });
+
+    Route::prefix('schedule')->group(function () {
+        Route::get('/', [ScheduleController::class, 'index'])->name('schedule');
     });
 });
 

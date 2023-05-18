@@ -48,8 +48,8 @@
                             @else
                             @if(\Illuminate\Support\Facades\Auth::user()->id_role === 1)
                                 <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/teachers">Преподаватели</a></li>
-                                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/#contact">Расписание</a></li>
-                                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/#contact">Звонки</a></li>
+                                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/schedule">Расписание</a></li>
+                                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/">Звонки</a></li>
                             @endif
                             <div id="app">
                                 <li class="nav-item mx-0 mx-lg-1 d-flex" style="text-transform: none;">

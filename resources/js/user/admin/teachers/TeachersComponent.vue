@@ -106,7 +106,7 @@ export default {
                         }
                     }).catch((response) => {
                 }).finally((response) => {
-                    this.updateTable();
+                    this.getDataTable();
                 })
             });
         },
@@ -130,9 +130,7 @@ export default {
             })
         },
         updateTable() {
-            setTimeout(() => {
-                this.getDataTable();
-            }, 1000);
+            this.getDataTable();
         }
     },
     mounted() {

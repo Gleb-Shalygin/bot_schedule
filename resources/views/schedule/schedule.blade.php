@@ -1,14 +1,14 @@
 @extends('layouts.menu_auth')
 
-@section('title', 'Админ панель')
+@section('title', 'Расписание')
 @section('header')
 @endsection
 
 
 @section('content')
-    <section class="page-section bg-primary text-white wrapper flex-grow-1" style="flex: 1 1 auto">
+    <section class="page-section text-secondary wrapper flex-grow-1 mt-5" style="flex: 1 1 auto">
         <div class="container">
-                <admin-component></admin-component>
+            <schedule-component></schedule-component>
         </div>
     </section>
     <!-- Copyright Section-->
