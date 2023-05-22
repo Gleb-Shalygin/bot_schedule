@@ -11,4 +11,8 @@ class ScheduleController extends Controller
         return view('schedule.schedule');
     }
 
+    public function getDataTable()
+    {
+
+    }
 }

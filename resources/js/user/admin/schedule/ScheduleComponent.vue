@@ -1,30 +1,22 @@
 <template>
     <div>
-<!--        <h1>Расписание</h1>-->
         <div class="d-flex">
             <h1>Расписание</h1>
             <el-button
                 style="margin: 7px 0px 7px 14px;"
-                size="large"
+                size="default"
                 type="success">Добавить расписание<el-icon style="margin-left: 10px"><CirclePlus /></el-icon></el-button>
         </div>
         <el-row :gutter="20">
             <el-col :span="7">
                 <div class="filter">
                     <span>Дата</span>
-<!--                    <el-date-picker-->
-<!--                        v-model="value1"-->
-<!--                        type="daterange"-->
-<!--                        range-separator="To"-->
-<!--                        start-placeholder="Начало"-->
-<!--                        end-placeholder="Конец"-->
-<!--                        size="default"-->
-<!--                    />-->
+
                     <el-date-picker
                         v-model="value2"
-                        type="week"
-                        format="[Неделя] ww"
-                        placeholder="Неделя"
+                        type="date"
+                        value-format="YYYY-MM-DD"
+                        placeholder="Выберите день"
                     />
                 </div>
             </el-col>
@@ -49,79 +41,55 @@
                 </div>
             </el-col>
         </el-row>
-        <div style="margin-top: 40px">
-            <el-card class="box-card">
-                <div class="main_content_for_card_schedule">
-                    <el-card class="box-card custom_card_schedule" style="margin-bottom: 10px" v-for="item in 5">
-                        <div>
-                            <div class="d-flex custom_nedelya">
-                                <h4>Первый четверг</h4>
-                                <div class="custom_date">
-                                    15.05.2023
-                                </div>
-                            </div>
-                            <hr>
-                            <div v-for="item in 6">
-                                <div class="d-flex">
-                                    <span>Пара: </span>
-                                    <el-input v-model="input"
-                                              style="width: 7%; margin-left: 10px;"
-                                              placeholder="Число" />
-                                </div>
-                                <div class="d-flex card_schedule">
-                                    <span>Название пары: </span>
-                                    <el-select v-model="value1" style="margin-left: 10px;" filterable placeholder="Название">
-                                        <el-option
-                                            v-for="item in options"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value"
-                                        />
-                                    </el-select>
-                                </div>
-                                <div class="d-flex card_schedule">
-                                    <span>Препод: </span>
-                                    <el-select v-model="value1" style="margin-left: 10px;" filterable placeholder="Фамилия">
-                                        <el-option
-                                            v-for="item in options"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value"
-                                        />
-                                    </el-select>
-                                </div>
-                                <div class="d-flex card_schedule">
-                                    <span>Кабинет: </span>
-                                    <el-input v-model="input"
-                                              size="default"
-                                              style="width: 7%; margin-left: 10px;"
-                                              placeholder="Число" />
 
-                                </div>
-                                <hr>
-                            </div>
-                            <div style="margin-left: auto">
-                                <el-button type="danger" style="margin-left: auto"
-                                           size="default"
-                                           @click="save()">Удалить</el-button>
-                                <el-button type="success"
-                                           size="default"
-                                           @click="save()">Сохранить</el-button>
+
+        <el-card class="box-card" style="margin-top: 40px">
+            <el-table :data="tableData" border style="width: 100%" ref="tableDataSchedule">
+                <el-table-column type="expand" label="Пары" width="70">
+                    <template #default="props">
+                        <div>
+                            <el-table :data="props.row.family" border>
+                                <el-table-column label="Пара" prop="name" width="80" />
+                                <el-table-column label="Название пары" prop="state" />
+                                <el-table-column label="Препод" width="160" prop="city"/>
+                                <el-table-column label="Кабинет" width="120" prop="address"/>
+                            </el-table>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="Дата" prop="date">
+                    <template #default="scope">
+                        <div style="display: flex; align-items: center">
+                            <el-icon><timer /></el-icon>
+                            <div class="custom_date_schedule_column">
+                                {{ scope.row.date }}
                             </div>
                         </div>
-                    </el-card>
-                </div>
-                <el-button type="success"
-                           size="default"
-                           @click="save()">Сохранить все изменения</el-button>
-            </el-card>
-        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="День недели" prop="name" />
+                <el-table-column label="Группа" prop="name" />
+                <el-table-column label="Действия">
+                    <template #default="scope">
+                        <el-button type="success"
+                                   size="default"
+                                   @click="showModalEdit(scope.row.id)">Редакитровать</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-card>
+
+        <ScheduleEditModal ref="schedule_edit_modal" />
+
     </div>
 </template>
 
 <script>
+import ScheduleEditModal from "@/user/admin/schedule/ScheduleEditModal.vue";
+
 export default {
     name: "ScheduleComponent",
+    components: { ScheduleEditModal },
     data() {
         return {
             input: null,
@@ -148,16 +116,100 @@ export default {
                     value: 'Option5',
                     label: 'Option5',
                 },
+            ],
+            dialogTableVisible: false,
+            tableData: [
+                {
+                    id: 1,
+                    date: '2016-05-03',
+                    name: 'Tom',
+                    state: 'California',
+                    city: 'San Francisco',
+                    address: '3650 21st St, San Francisco',
+                    zip: 'CA 94114',
+                    family: [
+                        {
+                            id: 1,
+                            name: '1 пара',
+                            state: 'Экономика и науч деятельность',
+                            city: 'Диогенов И.И.',
+                            address: 319,
+                        },
+                        {
+                            name: 'Spike',
+                            state: 'California',
+                            city: 'San Francisco',
+                            address: '3650 21st St, San Francisco',
+                            zip: 'CA 94114',
+                        },
+                        {
+                            name: 'Tyke',
+                            state: 'California',
+                            city: 'San Francisco',
+                            address: '3650 21st St, San Francisco',
+                            zip: 'CA 94114',
+                        },
+                    ],
+                },
+                {
+                    id: 2,
+                    date: '2016-05-02',
+                    name: 'Tom',
+                    state: 'California',
+                    city: 'San Francisco',
+                    address: '3650 21st St, San Francisco',
+                    zip: 'CA 94114',
+                    family: [
+                        {
+                            name: 'Jerry',
+                            state: 'California',
+                            city: 'San Francisco',
+                            address: '3650 21st St, San Francisco',
+                            zip: 'CA 94114',
+                        },
+                        {
+                            name: 'Spike',
+                            state: 'California',
+                            city: 'San Francisco',
+                            address: '3650 21st St, San Francisco',
+                            zip: 'CA 94114',
+                        },
+                        {
+                            name: 'Tyke',
+                            state: 'California',
+                            city: 'San Francisco',
+                            address: '3650 21st St, San Francisco',
+                            zip: 'CA 94114',
+                        },
+                    ],
+                },
             ]
         }
     },
     watch: {
         value2(val) {
-            console.log(val);
         }
     },
     methods: {
+        showModalEdit(id) {
+            this.$nextTick((response) => {
+                this.$refs['schedule_edit_modal'].open(id);
+            })
+        },
         save() {
+
+        },
+        addColumn(index) {
+            // console.log(index);
+            this.tableData[index.$index].family.push({
+                "name": "Tyke",
+                "state": "California",
+                "city": "San Francisco",
+                "address": "3650 21st St, San Francisco",
+                "zip": "CA 94114"
+            });
+            this.$refs['tableDataSchedule'].toggleRowExpansion(index, 'expand')
+
 
         }
     }
@@ -197,7 +249,14 @@ export default {
     width: 100%;
 }
 
-
+.custom_date_schedule_column {
+    margin-left: 5px;
+    background-color: rgb(26, 188, 156);
+    padding: 5px 10px;
+    color: white;
+    font-weight: 800;
+    border-radius: var(--el-border-radius-base);
+}
 /*.custom_nedelya {*/
 /*    background-color: #2c3e50;*/
 /*    color: white;*/
