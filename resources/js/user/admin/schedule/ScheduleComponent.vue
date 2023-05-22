@@ -48,11 +48,11 @@
                 <el-table-column type="expand" label="Пары" width="70">
                     <template #default="props">
                         <div>
-                            <el-table :data="props.row.family" border>
-                                <el-table-column label="Пара" prop="name" width="80" />
-                                <el-table-column label="Название пары" prop="state" />
-                                <el-table-column label="Препод" width="160" prop="city"/>
-                                <el-table-column label="Кабинет" width="120" prop="address"/>
+                            <el-table :data="props.row.pairs" border>
+                                <el-table-column label="Пара" prop="pair" width="80" />
+                                <el-table-column label="Название пары" prop="predmet" />
+                                <el-table-column label="Препод" width="160" prop="teacher_name"/>
+                                <el-table-column label="Кабинет" width="120" prop="office"/>
                             </el-table>
                         </div>
                     </template>
@@ -67,13 +67,13 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="День недели" prop="name" />
-                <el-table-column label="Группа" prop="name" />
+                <el-table-column label="День недели" prop="week_day" />
+                <el-table-column label="Группа" prop="group_name" />
                 <el-table-column label="Действия">
                     <template #default="scope">
                         <el-button type="success"
                                    size="default"
-                                   @click="showModalEdit(scope.row.id)">Редакитровать</el-button>
+                                   @click="showModalEdit(scope.row.id)">Редактировать</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -120,69 +120,25 @@ export default {
             dialogTableVisible: false,
             tableData: [
                 {
-                    id: 1,
-                    date: '2016-05-03',
-                    name: 'Tom',
-                    state: 'California',
-                    city: 'San Francisco',
-                    address: '3650 21st St, San Francisco',
-                    zip: 'CA 94114',
-                    family: [
+                    "id": 1,
+                    "date": "2023-05-22",
+                    "group_name": "ИС439",
+                    "week_day": "Первый понедельник",
+                    "pairs": [
                         {
-                            id: 1,
-                            name: '1 пара',
-                            state: 'Экономика и науч деятельность',
-                            city: 'Диогенов И.И.',
-                            address: 319,
+                            "pair": 4,
+                            "predmet": "Программирование",
+                            "teacher_name": "Шушкин",
+                            "office": "205"
                         },
                         {
-                            name: 'Spike',
-                            state: 'California',
-                            city: 'San Francisco',
-                            address: '3650 21st St, San Francisco',
-                            zip: 'CA 94114',
-                        },
-                        {
-                            name: 'Tyke',
-                            state: 'California',
-                            city: 'San Francisco',
-                            address: '3650 21st St, San Francisco',
-                            zip: 'CA 94114',
-                        },
-                    ],
-                },
-                {
-                    id: 2,
-                    date: '2016-05-02',
-                    name: 'Tom',
-                    state: 'California',
-                    city: 'San Francisco',
-                    address: '3650 21st St, San Francisco',
-                    zip: 'CA 94114',
-                    family: [
-                        {
-                            name: 'Jerry',
-                            state: 'California',
-                            city: 'San Francisco',
-                            address: '3650 21st St, San Francisco',
-                            zip: 'CA 94114',
-                        },
-                        {
-                            name: 'Spike',
-                            state: 'California',
-                            city: 'San Francisco',
-                            address: '3650 21st St, San Francisco',
-                            zip: 'CA 94114',
-                        },
-                        {
-                            name: 'Tyke',
-                            state: 'California',
-                            city: 'San Francisco',
-                            address: '3650 21st St, San Francisco',
-                            zip: 'CA 94114',
-                        },
-                    ],
-                },
+                            "pair": 5,
+                            "predmet": "Технология строения информации",
+                            "teacher_name": "Шалыгин",
+                            "office": "323"
+                        }
+                    ]
+                }
             ]
         }
     },
@@ -199,6 +155,16 @@ export default {
         save() {
 
         },
+        getDataTable() {
+            axios.get('/schedule/get-data-table')
+                .then((response) => {
+                    this.tableData = response.data;
+                }).catch((error) => {
+                    console.error(error);
+                }).finally(() => {
+
+                })
+        },
         addColumn(index) {
             // console.log(index);
             this.tableData[index.$index].family.push({
@@ -212,6 +178,9 @@ export default {
 
 
         }
+    },
+    mounted() {
+        this.getDataTable();
     }
 }
 </script>

@@ -40,6 +40,7 @@ Route::middleware('admin')->group(function () {
 
     Route::prefix('schedule')->group(function () {
         Route::get('/', [ScheduleController::class, 'index'])->name('schedule');
+        Route::get('/get-data-table', [ScheduleController::class, 'getDataTable']);
     });
 });
 
