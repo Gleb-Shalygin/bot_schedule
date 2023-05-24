@@ -24,7 +24,6 @@ class TeacherController extends Controller
 
     public function getDataTable(Request $request): \Illuminate\Database\Eloquent\Collection|array
     {
-//        dd($request);
         return $this->teacherService->getDataTable($request->input('filter'));
     }
 

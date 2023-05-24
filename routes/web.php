@@ -41,7 +41,11 @@ Route::middleware('admin')->group(function () {
     Route::prefix('schedule')->group(function () {
         Route::get('/', [ScheduleController::class, 'index'])->name('schedule');
         Route::get('/get-data-table', [ScheduleController::class, 'getDataTable']);
+        Route::post('/create-schedule', [ScheduleController::class, 'create']);
+        Route::post('/edit-schedule', [ScheduleController::class, 'edit']);
     });
+
+    Route::get('/get-basic-data', [\App\Http\Controllers\BasicDataController::class, 'getBasicData']);
 });
 
 

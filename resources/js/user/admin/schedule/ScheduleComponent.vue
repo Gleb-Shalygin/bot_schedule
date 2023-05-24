@@ -5,6 +5,7 @@
             <el-button
                 style="margin: 7px 0px 7px 14px;"
                 size="default"
+                @click="showModalEdit()"
                 type="success">Добавить расписание<el-icon style="margin-left: 10px"><CirclePlus /></el-icon></el-button>
         </div>
         <el-row :gutter="20">
@@ -27,10 +28,10 @@
                                size="default"
                                filterable placeholder="Группа">
                         <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
+                            v-for="(group, index) in groups"
+                            :key="index"
+                            :label="group.name"
+                            :value="group.id"
                         />
                     </el-select>
                 </div>
@@ -44,7 +45,7 @@
 
 
         <el-card class="box-card" style="margin-top: 40px">
-            <el-table :data="tableData" border style="width: 100%" ref="tableDataSchedule">
+            <el-table :data="tableData" border style="width: 100%" ref="tableDataSchedule" v-loading="loading">
                 <el-table-column type="expand" label="Пары" width="70">
                     <template #default="props">
                         <div>
@@ -73,13 +74,18 @@
                     <template #default="scope">
                         <el-button type="success"
                                    size="default"
-                                   @click="showModalEdit(scope.row.id)">Редактировать</el-button>
+                                   @click="showModalEdit(scope.row.id_group, scope.row.date)">Редактировать</el-button>
                     </template>
                 </el-table-column>
             </el-table>
         </el-card>
 
-        <ScheduleEditModal ref="schedule_edit_modal" />
+        <ScheduleEditModal ref="schedule_edit_modal"
+                           :couples="couples"
+                           :teachers="teachers"
+                           :groups="groups"
+                           :calls="calls"
+                           @onCloseModal="onCloseModal"/>
 
     </div>
 </template>
@@ -93,53 +99,16 @@ export default {
     data() {
         return {
             input: null,
+            loading: false,
             value1: '',
             value2: '',
-            options: [
-                {
-                    value: 'Option1',
-                    label: 'Option1',
-                },
-                {
-                    value: 'Option2',
-                    label: 'Option2',
-                },
-                {
-                    value: 'Option3',
-                    label: 'Option3',
-                },
-                {
-                    value: 'Option4',
-                    label: 'Option4',
-                },
-                {
-                    value: 'Option5',
-                    label: 'Option5',
-                },
-            ],
+            groups: [],
+            couples: [],
+            teachers: [],
+            calls: [],
+            currentGroup: null,
             dialogTableVisible: false,
-            tableData: [
-                {
-                    "id": 1,
-                    "date": "2023-05-22",
-                    "group_name": "ИС439",
-                    "week_day": "Первый понедельник",
-                    "pairs": [
-                        {
-                            "pair": 4,
-                            "predmet": "Программирование",
-                            "teacher_name": "Шушкин",
-                            "office": "205"
-                        },
-                        {
-                            "pair": 5,
-                            "predmet": "Технология строения информации",
-                            "teacher_name": "Шалыгин",
-                            "office": "323"
-                        }
-                    ]
-                }
-            ]
+            tableData: []
         }
     },
     watch: {
@@ -147,26 +116,30 @@ export default {
         }
     },
     methods: {
-        showModalEdit(id) {
+        showModalEdit(group = null, date = null) {
             this.$nextTick((response) => {
-                this.$refs['schedule_edit_modal'].open(id);
+                this.$refs['schedule_edit_modal'].open(group, date);
             })
         },
-        save() {
-
+        // save() {
+        //
+        // },
+        onCloseModal(val) {
+            this.getDataTable();
         },
         getDataTable() {
+            this.loading = true;
+
             axios.get('/schedule/get-data-table')
                 .then((response) => {
                     this.tableData = response.data;
                 }).catch((error) => {
                     console.error(error);
                 }).finally(() => {
-
+                    this.loading = false;
                 })
         },
         addColumn(index) {
-            // console.log(index);
             this.tableData[index.$index].family.push({
                 "name": "Tyke",
                 "state": "California",
@@ -177,10 +150,24 @@ export default {
             this.$refs['tableDataSchedule'].toggleRowExpansion(index, 'expand')
 
 
+        },
+        getBasicData() {
+            axios.get('/get-basic-data')
+                .then((response) => {
+                    this.groups = response.data.groups;
+                    this.couples = response.data.couples;
+                    this.teachers = response.data.teachers;
+                    this.calls = response.data.calls;
+                }).catch((error) => {
+                    console.log(error);
+            }).finally(() => {
+
+            })
         }
     },
     mounted() {
         this.getDataTable();
+        this.getBasicData();
     }
 }
 </script>

@@ -4,7 +4,7 @@
             <h1>Преподаватели</h1>
             <el-button
                 class="add_teacher_button"
-                size="large"
+                size="default"
                 type="success"
                 @click="addTeacher()">Добавить преподавателя <el-icon style="margin-left: 10px"><CirclePlus /></el-icon></el-button>
             <el-input v-model="filter" class="custom_search" size="large" placeholder="Поиск преподавателя" />
@@ -27,15 +27,15 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="Действия"
-                                     width="220" >
+                                     width="251" >
                         <template #default="scope">
                             <el-button type="success"
-                                       size="small"
+                                       size="default"
                                        @click="getTeacher(scope.row.id)"
                             >Редактировать</el-button
                             >
                             <el-button
-                                size="small"
+                                size="default"
                                 type="danger"
                                 @click="deleteTeacher(scope.row.id)"
                             >Удалить</el-button
