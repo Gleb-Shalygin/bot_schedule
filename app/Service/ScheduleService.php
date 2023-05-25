@@ -36,10 +36,6 @@ class ScheduleService
         foreach($querySchedule as $schedule) {
             if(in_array($schedule['date'], array_column($result, 'date')) &&
                 in_array($schedule['group_name'], array_column($result, 'group_name'))) {
-//                $currentKey = array_filter($result, function($item) use ($schedule) {
-//                    dd($item);
-//                    return ($item['date'] === $schedule['date'] && $item['group_name'] === $schedule['group_name']);
-//                });
                 $currentKey = null;
 
                 foreach($result as $key => $item) {

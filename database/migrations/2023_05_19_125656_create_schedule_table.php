@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('schedule', function (Blueprint $table) {
             $table->id();
             $table->timestamp('date')->nullable();
-            $table->integer('id_call')->nullable();
-            $table->integer('id_group')->nullable();
-            $table->integer('id_couples');
-            $table->integer('id_user')->nullable();
+            $table->bigInteger('id_call')->nullable()->unsigned();
+            $table->bigInteger('id_group')->nullable()->unsigned();
+            $table->bigInteger('id_couples')->nullable()->unsigned();
+            $table->bigInteger('id_user')->nullable()->unsigned();
             $table->string('office')->nullable();
             $table->integer('pair')->nullable();
             $table->timestamps();

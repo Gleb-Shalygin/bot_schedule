@@ -9,12 +9,12 @@
                 type="success">Добавить расписание<el-icon style="margin-left: 10px"><CirclePlus /></el-icon></el-button>
         </div>
         <el-row :gutter="20">
-            <el-col :span="7">
+            <el-col :span="6">
                 <div class="filter">
                     <span>Дата</span>
 
                     <el-date-picker
-                        v-model="value2"
+                        v-model="currentDate"
                         type="date"
                         value-format="YYYY-MM-DD"
                         placeholder="Выберите день"
@@ -24,7 +24,7 @@
             <el-col :span="6">
                 <div class="filter">
                     <span>Группа</span>
-                    <el-select v-model="input"
+                    <el-select v-model="currentGroup"
                                size="default"
                                filterable placeholder="Группа">
                         <el-option
@@ -36,15 +36,9 @@
                     </el-select>
                 </div>
             </el-col>
-            <el-col :span="4">
-                <div class="filter">
-                    <el-button type="success" style="margin-top: 28px;" size="default">Поиск</el-button>
-                </div>
-            </el-col>
         </el-row>
 
-
-        <el-card class="box-card" style="margin-top: 40px">
+        <el-card class="box-card" style="margin-top: 40px" v-show="isShowTable">
             <el-table :data="tableData" border style="width: 100%" ref="tableDataSchedule" v-loading="loading">
                 <el-table-column type="expand" label="Пары" width="70">
                     <template #default="props">
@@ -98,21 +92,30 @@ export default {
     components: { ScheduleEditModal },
     data() {
         return {
-            input: null,
             loading: false,
-            value1: '',
-            value2: '',
+            currentDate: '',
+            currentGroup: '',
             groups: [],
             couples: [],
             teachers: [],
             calls: [],
-            currentGroup: null,
             dialogTableVisible: false,
             tableData: []
         }
     },
     watch: {
-        value2(val) {
+        currentDate(val) {
+            if(this.isShowTable)
+                this.getDataTable();
+        },
+        currentGroup(val) {
+            if(this.isShowTable)
+                this.getDataTable();
+        }
+    },
+    computed: {
+        isShowTable() {
+            return this.currentDate && this.currentGroup;
         }
     },
     methods: {
@@ -121,17 +124,16 @@ export default {
                 this.$refs['schedule_edit_modal'].open(group, date);
             })
         },
-        // save() {
-        //
-        // },
         onCloseModal(val) {
-            this.getDataTable();
+            if(this.isShowTable)
+                this.getDataTable();
         },
         getDataTable() {
             this.loading = true;
 
-            axios.get('/schedule/get-data-table')
-                .then((response) => {
+            axios.get('/schedule/get-data-table', {
+                params: {group: this.currentGroup, date: this.currentDate}
+            }).then((response) => {
                     this.tableData = response.data;
                 }).catch((error) => {
                     console.error(error);
@@ -148,8 +150,6 @@ export default {
                 "zip": "CA 94114"
             });
             this.$refs['tableDataSchedule'].toggleRowExpansion(index, 'expand')
-
-
         },
         getBasicData() {
             axios.get('/get-basic-data')
@@ -166,7 +166,6 @@ export default {
         }
     },
     mounted() {
-        this.getDataTable();
         this.getBasicData();
     }
 }

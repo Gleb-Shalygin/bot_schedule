@@ -121,9 +121,7 @@ export default {
         },
         open(group, date) {
             this.dialogTableVisible = true;
-            this.loading = true;
 
-            // console.log(this.loading);
             if(group && date) {
                 this.getDataById(group, date);
                 this.isEditModal = true;
