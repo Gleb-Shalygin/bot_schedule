@@ -24,6 +24,46 @@ Route::get('/home', function () {
     return 1;
 });
 
+
+
+Route::get('/test-bot', function (\App\Helpers\Telegram $telegram) {
+    $http = $telegram->sendDocument(856835272, '1.png');
+    dd($http->body());
+});
+
+Route::get('/test-bot-button', function (\App\Helpers\Telegram $telegram) {
+    $buttons = [
+        'inline_keyboard' => [
+            [
+                [
+                    'text' => 'button1',
+                    'callback_data' => '1'
+                ],
+                [
+                    'text' => 'button2',
+                    'callback_data' => '2'
+                ],
+            ],
+            [
+                [
+                    'text' => 'button2',
+                    'callback_data' => '2'
+                ],
+            ]
+        ]
+    ];
+
+    $sendMessage = $telegram->sendButtons(856835272, 'Тестовое сообщение для расписания аххахаха', json_encode($buttons));
+
+    $messageResult = json_decode($sendMessage);
+
+    dd($messageResult);
+});
+
+
+
+
+
 Route::middleware('admin')->group(function () {
     Route::get('/admin', [\App\Http\Controllers\Admin\AdminController::class, 'index'])
         ->name('admin');
