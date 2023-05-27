@@ -26,41 +26,47 @@ Route::get('/home', function () {
 
 
 
-Route::get('/test-bot', function (\App\Helpers\Telegram $telegram) {
-    $http = $telegram->sendDocument(856835272, '1.png');
-    dd($http->body());
+Route::get('/test-bot', function () {
+//    $http = \Illuminate\Support\Facades\Http::get('https://api.telegram.org/bot6114892088:AAHO27RSCo12aYUPwzaiZnSINR41gLOM-8k/setWebhook?url=https://3c6e-178-74-94-57.ngrok-free.app/webhook');
+    $http = \Illuminate\Support\Facades\Http::get('https://api.telegram.org/bot6114892088:AAHO27RSCo12aYUPwzaiZnSINR41gLOM-8k/getWebhookInfo');
+
+    dd(json_decode($http->body()));
 });
 
-Route::get('/test-bot-button', function (\App\Helpers\Telegram $telegram) {
-    $buttons = [
-        'inline_keyboard' => [
-            [
-                [
-                    'text' => 'button1',
-                    'callback_data' => '1'
-                ],
-                [
-                    'text' => 'button2',
-                    'callback_data' => '2'
-                ],
-            ],
-            [
-                [
-                    'text' => 'button2',
-                    'callback_data' => '2'
-                ],
-            ]
-        ]
-    ];
+//[\App\Http\Controllers\WebhookController::class, 'index']
+//Route::post('/webhook', [\App\Http\Controllers\WebhookController::class, 'index']);
 
-    $sendMessage = $telegram->sendButtons(856835272, 'Тестовое сообщение для расписания аххахаха', json_encode($buttons));
+//Route::get('/test-bot-button', function (\App\Helpers\Telegram $telegram) {
+//    $buttons = [
+//        'inline_keyboard' => [
+//            [
+//                [
+//                    'text' => 'button1',
+//                    'callback_data' => '1'
+//                ],
+//                [
+//                    'text' => 'button2',
+//                    'callback_data' => '2'
+//                ],
+//            ],
+//            [
+//                [
+//                    'text' => 'button2',
+//                    'callback_data' => '2'
+//                ],
+//            ]
+//        ]
+//    ];
+//
+//    $sendMessage = $telegram->sendButtons(856835272, 'Тестовое сообщение для расписания аххахаха', json_encode($buttons));
+//
+//    $messageResult = json_decode($sendMessage);
+//
+//    dd($messageResult);
+//});
 
-    $messageResult = json_decode($sendMessage);
 
-    dd($messageResult);
-});
-
-
+Route::post('/webhook', [\App\Http\Controllers\WebhookController::class, 'index']);
 
 
 
