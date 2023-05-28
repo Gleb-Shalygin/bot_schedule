@@ -3,11 +3,13 @@
 namespace App\Service;
 
 use App\Models\Schedule;
+use Illuminate\Support\Facades\Log;
 
 class ScheduleService
 {
     public function getDataTable($params): array
     {
+        Log::debug($params);
         $querySchedule = $this->getQueryResultForDataTable($params);
 
         return $this->buildForDataTableResultSchedule($querySchedule);

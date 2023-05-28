@@ -36,19 +36,33 @@ class StartService
         $this->telegram->sendButtons($userId, (string)view('bot.report.start_message'), json_encode($buttons));
     }
 
-    public function student($userId):void
+    public function student($data):void
     {
-        // 856835272
+        // Мой id телеги 856835272
         $groups = Group::get(['id', 'name'])->toArray();
         $result = [];
+        $count = 0;
+        $column = [];
+        $userId = (int)$data['callback_query']['from']['id'];
 
-        foreach($groups as $group)
-            $result[][] = [
+        foreach($groups as $key => $group) {
+            $column[] = [
                 'text' => $group['name'],
-                'callback_data' => json_encode(['key' => 'selectGroups', 'type' => 'buttons', 'id' => $group['id']])
+                'callback_data' => json_encode(['key' => 'stGroups', 'type' => 'buttons', 'id' => $group['id']])
             ];
+            $count++;
 
-        list($right, $left) = array_chunk($result, ceil(count($result)/2));
+            if((count($groups) - 1) === $key) {
+                $result[] = $column;
+                break;
+            }
+
+            if($count === 2) {
+                $result[] = $column;
+                $column = [];
+                $count = 0;
+            }
+        }
 
         $buttons = [
             'inline_keyboard' => $result
@@ -56,6 +70,6 @@ class StartService
 
         $http = $this->telegram->sendButtons($userId, (string)view('bot.select_group'), json_encode($buttons));
 
-        Log::debug($http);
+//        Log::debug($http);
     }
 }

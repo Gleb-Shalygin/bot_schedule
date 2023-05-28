@@ -15,6 +15,7 @@ class WebhookService
 
     public function index($data)
     {
+//        Log::debug($data);
         if (isset($data['message']['entities'][0]['type']) && (string)$data['message']['entities'][0]['type'] === 'bot_command')
             return $this->servicesForCommands($data);
 
@@ -45,9 +46,7 @@ class WebhookService
 
     private function servicesForButtons($data)
     {
-        Log::debug($data);
         $queryArray = (array)json_decode($data['callback_query']['data']);
-        $userId = (int)$data['callback_query']['from']['id'];
 
         $type = (string)$queryArray['type'];
         $key = (string)$queryArray['key'];
@@ -55,7 +54,7 @@ class WebhookService
         $class = $this->commands[$type][$key]['class'];
         $method = $this->commands[$type][$key]['method'];
 
-        (new $class())->$method($userId);
+        (new $class())->$method($data);
 
         return response()->json(true, 201);
     }

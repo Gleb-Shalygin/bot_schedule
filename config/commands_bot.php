@@ -1,5 +1,6 @@
 <?php
 use  App\Service\Bot\StartService;
+use App\Service\Bot\StudentService;
 
 return [
     // Комманды и их методы
@@ -14,6 +15,14 @@ return [
         'student' => [
             'class' => StartService::class,
             'method' => 'student'
+        ],
+        'stGroups' => [
+            'class' => StudentService::class,
+            'method' => 'groups'
+        ],
+        'stDate' => [
+            'class' => StudentService::class,
+            'method' => 'date'
         ]
     ]
 ];
