@@ -11,19 +11,17 @@ use Illuminate\Support\Facades\Log;
 class StudentService
 {
     protected $telegram;
+    protected $buttonsService;
 
     public function __construct()
     {
         $this->telegram = new Telegram(new Http());
+        $this->buttonsService = new ButtonsService();
     }
 
     public function groups($data)
     {
         $userId = (int)$data['callback_query']['from']['id'];
-        $date = strtotime('monday this week');
-        $result = [];
-        $count = 0;
-        $column = [];
 
         $data = (array)json_decode($data['callback_query']['data']);
 
@@ -38,31 +36,12 @@ class StudentService
         if($telegramUser[0]['group_id'] !== (int)$data['id']) {
             $telegramUser = TelegramUser::where('telegram_id', $userId)->first();
             $telegramUser->group_id = (int)$data['id'];
+            $telegramUser->teacher_id = null;
             $telegramUser->save();
         }
 
-        for ($i = 0;$i < 14;$i++) {
-            $column[] = [
-                'text' => date("Y-m-d", $date),
-                'callback_data' => json_encode(['key' => 'stDate', 'type' => 'buttons', 'date' => date("Y-m-d", $date)])
-            ];
-            $count++;
-            $date = strtotime('+1 day', $date);
-
-            if($i === 13) {
-                $result[] = $column;
-                break;
-            }
-
-            if($count === 2) {
-                $result[] = $column;
-                $column = [];
-                $count = 0;
-            }
-        }
-
         $buttons = [
-            'inline_keyboard' => $result
+            'inline_keyboard' => $this->buttonsService->getDatesButton('stDate')
         ];
 
         $this->telegram->sendButtons($userId, (string)view('bot.select_date'), json_encode($buttons));
@@ -72,6 +51,10 @@ class StudentService
     public function date($data)
     {
         $userId = (int)$data['callback_query']['from']['id'];
+
+        if ($this->checkOnTeacher($userId))
+            exit;
+
         $data = (array)json_decode($data['callback_query']['data']);
 
         $telegramUser = TelegramUser::where('telegram_id', $userId)->get(['group_id']);
@@ -80,21 +63,27 @@ class StudentService
 
         $buttons = [
             'inline_keyboard' => [
+                $this->buttonsService->getTodayAndTomorrowButton('stDate'),
                 [
-                    [
-                        'text' => 'Сегодня',
-                        'callback_data' => '1'
-                    ],
-                    [
-                        'text' => 'Завтра',
-                        'callback_data' => '2'
-                    ]
+                    $this->buttonsService->getDateByGroupIdButton('stGroups', ['name' => 'Даты (текущая и след. неделя)', 'id' => $telegramUser[0]['group_id']])
                 ]
             ]
         ];
 
-        $http = $this->telegram->sendButtons($userId, (string)view('bot.schedule_list', $schedule[0]), json_encode($buttons));
+        if($schedule !== [])
+            $this->telegram->sendButtons($userId, (string)view('bot.schedule_list', $schedule[0]), json_encode($buttons));
 
-        Log::debug($http);
+        if($schedule === [])
+            $this->telegram->sendButtons($userId, '<b>Данные не загружены!</b>', json_encode($buttons));
+    }
+
+    private function checkOnTeacher($userId): bool
+    {
+        $telegramUser = TelegramUser::where('telegram_id', $userId)->get()->toArray();
+
+        if(isset($telegramUser[0]['teacher_id']))
+            $this->telegram->sendMessage($userId, (string)view('bot.dont_palomka'));
+
+        return isset($telegramUser[0]['teacher_id']);
     }
 }

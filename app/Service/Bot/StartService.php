@@ -10,14 +10,18 @@ use Illuminate\Support\Facades\Log;
 class StartService
 {
     protected $telegram;
+    protected $buttonsService;
 
     public function __construct()
     {
         $this->telegram = new Telegram(new Http());
+        $this->buttonsService = new ButtonsService();
     }
 
-    public function start($userId):void
+    public function start($data):void
     {
+        $userId = (int)$data['message']['from']['id'];
+
         $buttons = [
             'inline_keyboard' => [
                 [
@@ -46,10 +50,8 @@ class StartService
         $userId = (int)$data['callback_query']['from']['id'];
 
         foreach($groups as $key => $group) {
-            $column[] = [
-                'text' => $group['name'],
-                'callback_data' => json_encode(['key' => 'stGroups', 'type' => 'buttons', 'id' => $group['id']])
-            ];
+            $column[] = $this->buttonsService->getDateByGroupIdButton('stGroups', $group);
+
             $count++;
 
             if((count($groups) - 1) === $key) {
@@ -68,8 +70,13 @@ class StartService
             'inline_keyboard' => $result
         ];
 
-        $http = $this->telegram->sendButtons($userId, (string)view('bot.select_group'), json_encode($buttons));
+        $this->telegram->sendButtons($userId, (string)view('bot.select_group'), json_encode($buttons));
+    }
 
-//        Log::debug($http);
+    public function teacher($data)
+    {
+        $userId = (int)$data['callback_query']['from']['id'];
+
+        $this->telegram->sendMessage($userId, (string)view('bot.teacher.hello_teacher'));
     }
 }

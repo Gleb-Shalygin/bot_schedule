@@ -16,8 +16,10 @@ class WebhookService
     public function index($data)
     {
 //        Log::debug($data);
-        if (isset($data['message']['entities'][0]['type']) && (string)$data['message']['entities'][0]['type'] === 'bot_command')
+        if (isset($data['message']['entities'][0]['type']) && (string)$data['message']['entities'][0]['type'] === 'bot_command') {
+//            Log::debug('Здесь?');
             return $this->servicesForCommands($data);
+        }
 
         if (isset($data['callback_query']['data']))
             return $this->servicesForButtons($data);
@@ -32,14 +34,15 @@ class WebhookService
      */
     private function servicesForCommands($data): \Illuminate\Http\JsonResponse
     {
-        $key = $data['message']['text'];
+        $text = $data['message']['text'];
 
-        $class = (string)$this->commands['commands'][$key]['class'];
-        $method = (string)$this->commands['commands'][$key]['method'];
+        // ^\/[a-z]+$ - регулярка на команду
+        preg_match('/^\/[a-z]+/', $text, $key, PREG_OFFSET_CAPTURE);
 
-        $userId = (int)$data['message']['from']['id'];
+        $class = (string)$this->commands['commands'][$key[0][0]]['class'];
+        $method = (string)$this->commands['commands'][$key[0][0]]['method'];
 
-        (new $class())->$method($userId);
+        (new $class())->$method($data);
 
         return response()->json(true, 201);
     }

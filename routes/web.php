@@ -27,8 +27,8 @@ Route::get('/home', function () {
 
 
 //Route::get('/test-bot', function () {
-////    $http = \Illuminate\Support\Facades\Http::get('https://api.telegram.org/bot6114892088:AAHO27RSCo12aYUPwzaiZnSINR41gLOM-8k/setWebhook?url=https://ad88-94-137-15-68.ngrok-free.app/webhook');
-//    $http = \Illuminate\Support\Facades\Http::get('https://api.telegram.org/bot6114892088:AAHO27RSCo12aYUPwzaiZnSINR41gLOM-8k/getWebhookInfo');
+//    $http = \Illuminate\Support\Facades\Http::get('https://api.telegram.org/bot6114892088:AAHO27RSCo12aYUPwzaiZnSINR41gLOM-8k/setWebhook?url=https://245b-94-137-15-68.ngrok-free.app/webhook');
+////    $http = \Illuminate\Support\Facades\Http::get('https://api.telegram.org/bot6114892088:AAHO27RSCo12aYUPwzaiZnSINR41gLOM-8k/getWebhookInfo');
 //
 //    dd(json_decode($http->body()));
 //});
