@@ -18,7 +18,7 @@
     <header class="masthead bg-primary text-white text-center">
         <div class="container d-flex align-items-center flex-column">
             <!-- Masthead Avatar Image-->
-            <img class="masthead-avatar mb-5" src="assets/img/avataaars.svg" alt="..." />
+            <img class="masthead-avatar mb-5" src="assets/img/telegram.png" alt="..." />
             <!-- Masthead Heading-->
             <h1 class="masthead-heading text-uppercase mb-0">Начать работу с ботом</h1>
             <!-- Icon Divider-->
@@ -44,8 +44,8 @@
             </div>
             <!-- About Section Content-->
             <div class="row">
-                <div class="col-lg-4 ms-auto"><p class="lead">Данный бот позволяет расширять возможности благодаря excel в telegram. С помощью бота помощника преподаватели смогут по уже готовому шаблону вносить расписание на грядущую неделю, а так-же задавать на несколько недель вперед.</p></div>
-                <div class="col-lg-4 me-auto"><p class="lead">Вы сможете ознакомиться с документацией в работе с данным ботом. Логин, пароль и права на использование бота можете взять у своего управляющего.</p></div>
+                <div class="col-lg-4 ms-auto"><p class="lead">Данный бот позволяет расширять возможности благодаря telegram-bot. С помощью бота помощника преподаватели смогут вносить расписание на грядущую неделю, а так-же задавать на несколько недель вперед.</p></div>
+                <div class="col-lg-4 me-auto"><p class="lead">Вы сможете просматривать расписание своей группы, в несколько кликов, свое расписание. Закреплять объявления для группы</p></div>
             </div>
         </div>
     </section>
