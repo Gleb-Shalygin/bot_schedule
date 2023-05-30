@@ -3,6 +3,8 @@
 namespace App\Service\Bot;
 
 use App\Helpers\Telegram;
+use App\Models\Group;
+use App\Models\TeacherGroup;
 use App\Models\TelegramUser;
 use App\Models\User;
 use App\Service\ScheduleService;
@@ -22,7 +24,6 @@ class TeacherService
 
     public function auth($data)
     {
-        Log::debug('------------------------- наша дата');
         $text = trim($data['message']['text'], '/auth ');
         $userId = (int)$data['message']['from']['id'];
         $dataAuth = explode(', ', $text);
@@ -137,5 +138,76 @@ class TeacherService
 
         if($schedule === [])
             $this->telegram->sendButtons($userId, '<b>Данные не загружены!</b>', json_encode($buttons));
+    }
+
+    public function schedule($data)
+    {
+        $userId = (int)$data['callback_query']['from']['id'];
+        $data = (array)json_decode($data['callback_query']['data']);
+
+        $telegramUser = TelegramUser::where('telegram_id', $userId)->get()->toArray();
+
+        $schedule = (new ScheduleService())->getDataTable(['date' => $data['date'], 'user' => $telegramUser[0]['teacher_id']]);
+
+        $buttons = [
+            'inline_keyboard' => array_merge([
+                $this->buttonsService->getTodayAndTomorrowButton('schedule')
+            ], $this->buttonsService->getMenuButton())
+        ];
+
+
+        if($schedule !== []) {
+            $dataForView = $schedule[0];
+
+            unset($dataForView['group_name']);
+
+            $dataForView['group_name'] = (User::find($telegramUser[0]['teacher_id']))->name;
+            $dataForView['message'] = '';
+
+            $this->telegram->sendButtons($userId, (string)view('bot.schedule_list', $dataForView), json_encode($buttons));
+        }
+
+        if($schedule === [])
+            $this->telegram->sendButtons($userId, '<b>Данные не загружены!</b>', json_encode($buttons));
+    }
+
+    public function news($data): void
+    {
+        $userId = (int)$data['callback_query']['from']['id'];
+
+        $this->telegram->sendMessage($userId, (string)view('bot.teacher.news'));
+    }
+
+    public function addNews($data)
+    {
+        $text = trim($data['message']['text'], '/news ');
+        $userId = (int)$data['message']['from']['id'];
+        $dataNews = explode(', ', $text);
+        $group = $dataNews[0];
+        $message = $dataNews[1];
+        $telegramUser = TelegramUser::where('telegram_id', $userId)->get()->toArray();
+
+        $buttons = [
+            'inline_keyboard' => $this->buttonsService->getMenuButton()
+        ];
+
+        if(!isset($dataNews[0]) || !isset($dataNews[1])) {
+            $this->telegram->sendButtons($userId, (string)view('bot.dont_palomka'), $buttons);
+            exit;
+        }
+
+        $group = Group::where('name', 'LIKE', '%'.$group.'%')->get('id')->toArray();
+
+        $isGroup = TeacherGroup::where([['id_group', $group], ['id_teacher', $telegramUser[0]['teacher_id']]])->get()->toArray();
+
+        if(!isset($isGroup[0]['id'])) {
+            $this->telegram->sendButtons($userId, 'Это не ваша группа', $buttons);
+            exit;
+        }
+
+        Group::where('name', 'LIKE', '%'.$dataNews[0].'%')
+            ->update(['message' => $message]);
+
+        $this->telegram->sendButtons($userId, 'Вы успешно добавили объявление!', $buttons);
     }
 }

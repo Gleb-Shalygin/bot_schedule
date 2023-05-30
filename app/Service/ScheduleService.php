@@ -19,15 +19,18 @@ class ScheduleService
     {
         return Schedule::select('schedule.id as id', 'id_group', 'id_call', 'schedule.office as office', 'schedule.pair as pair',
             'calls.week_day as week_day', 'id_couples', 'couples.name as predmet', 'id_user', 'users.name as teacher_name',
-            'groups.name as group_name')
+            'groups.name as group_name', 'groups.message as message')
             ->selectRaw('DATE_FORMAT(date, "%Y-%m-%d") as date')
             ->leftJoin('calls', 'schedule.id_call', 'calls.id')
             ->leftJoin('groups', 'schedule.id_group', 'groups.id')
             ->leftJoin('couples', 'schedule.id_couples', 'couples.id')
             ->leftJoin('users', 'schedule.id_user', 'users.id')
-            ->when((isset($params['date']) && isset($params['group'])),
+            ->when((isset($params['date']) && isset($params['group']))
+                || (isset($params['date']) && isset($params['user'])),
                 fn($query) => $query->whereBetween('schedule.date', [$params['date'].' 00:00:00', $params['date'].' 23:59:59'])
-                    ->where('schedule.id_group', $params['group']))
+                    ->when(isset($params['group']), fn($query) => $query->where('schedule.id_group', $params['group']),
+                        fn($query) => $query->where('schedule.id_user', $params['user']))
+            )
             ->get();
     }
 
@@ -63,6 +66,7 @@ class ScheduleService
                 'date' => $schedule['date'],
                 'id_group' => $schedule['id_group'],
                 'id_call' => $schedule['id_call'],
+                'message' => $schedule['message'],
                 'group_name' => $schedule['group_name'],
                 'week_day' => $schedule['week_day'],
                 'pairs' => [

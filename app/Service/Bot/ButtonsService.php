@@ -64,6 +64,8 @@ class ButtonsService
 
     public function getMenuButton()
     {
+        $dateToday = date("Y-m-d", strtotime("now"));
+
         return [
             [
                 [
@@ -74,13 +76,13 @@ class ButtonsService
             [
                 [
                     'text' => 'Ваше расписание',
-                    'callback_data' => json_encode(['key' => 'menu', 'type' => 'buttons'])
+                    'callback_data' => json_encode(['key' => 'schedule', 'type' => 'buttons', 'date' => $dateToday])
                 ]
             ],
             [
                 [
                     'text' => 'Закрепить объявление',
-                    'callback_data' => json_encode(['key' => 'menu', 'type' => 'buttons'])
+                    'callback_data' => json_encode(['key' => 'news', 'type' => 'buttons'])
                 ]
             ]
         ];

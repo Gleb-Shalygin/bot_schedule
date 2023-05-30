@@ -1,5 +1,5 @@
 <b>Расписание {{ $group_name }}</b>
-{{ $week_day }}
+{{ $week_day }} {{ $date }}
 
 @foreach($pairs as $pair)
 <b>{{ $pair['pair'] }} пара:</b> {{ $pair['predmet'] }}
@@ -7,3 +7,7 @@
 Кабинет: {{ $pair['office'] }}
 
 @endforeach
+
+<b>Объявление:</b>
+
+{{ $message }}

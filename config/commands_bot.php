@@ -13,6 +13,10 @@ return [
         '/auth' => [
             'class' => TeacherService::class,
             'method' => 'auth'
+        ],
+        '/news' => [
+            'class' => TeacherService::class,
+            'method' => 'addNews'
         ]
     ],
     // Кнопки и их методы
@@ -44,6 +48,14 @@ return [
         'selGroup' => [
             'class' => TeacherService::class,
             'method' => 'dates'
+        ],
+        'schedule' => [
+            'class' => TeacherService::class,
+            'method' => 'schedule'
+        ],
+        'news' => [
+            'class' => TeacherService::class,
+            'method' => 'news'
         ]
     ]
 ];

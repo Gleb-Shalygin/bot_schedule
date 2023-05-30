@@ -37,13 +37,15 @@ class Handler extends ExceptionHandler
 
     public function report(Throwable $e)
     {
-        $dataError = [
-            'description' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine()
-        ];
 
-        $this->telegram->sendMessage(856835272, (string)view('bot.report.report', $dataError));
+        // Пусть побудит закомменченным, на хостинге наверное разкомменчу.
+//        $dataError = [
+//            'description' => $e->getMessage(),
+//            'file' => $e->getFile(),
+//            'line' => $e->getLine()
+//        ];
+//
+//        $this->telegram->sendMessage(856835272, (string)view('bot.report.report', $dataError));
     }
 
     /**
